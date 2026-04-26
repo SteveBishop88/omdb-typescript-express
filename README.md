@@ -85,8 +85,12 @@ Implemented Stories
 How to Use this as a Template:
 
 Feel free to use the existing db/movies.db to test SQL queries:
+
 Bash
 
+# From the project root:
 sqlite3 movies_api/db/movies.db
+
+# Once inside the sqlite prompt:
 .tables
 .schema movies
