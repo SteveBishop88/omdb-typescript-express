@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies by Genre</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --header-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Consistent Header Navigation */
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-nav h1 {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #0f172a;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            width: 120px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .input-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 24px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            align-items: center;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-main);
+        }
+
+        select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: var(--white);
+            width: 250px;
+            outline: none;
+        }
+
+        select:focus { border-color: var(--primary); }
+
+        button {
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover { background-color: var(--primary-hover); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--header-bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover { background-color: #fcfcfd; }
+
+        .imdb-tag {
+            font-family: monospace;
+            background: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .genre-pill {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin: 2px;
+            font-weight: 500;
+        }
+
+        .movie-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .movie-link:hover { text-decoration: underline; }
+
+        .pagination {
+            margin-top: 32px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pagination button {
+            background-color: var(--white);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-nav">
+            <a href="/index.html" class="nav-link">← Main Menu</a>
+            <h1>Movies by Genre</h1>
+            <a href="/movies.html" class="nav-link" style="text-align: right;">← Library</a>
+        </header>
+
+        <div class="input-controls">
+            <label for="genreSelect">Select Genre:</label>
+            <select id="genreSelect">
+                <option value="" disabled selected>-- Select a Genre --</option>
+            </select>
+            <button onclick="loadMoviesByGenre(1)">Load Movies</button>
+        </div>
+
+        <table id="movieTable">
+            <thead>
+                <tr>
+                    <th>IMDb ID</th>
+                    <th>Title</th>
+                    <th>Genres</th>
+                    <th>Release Date</th>
+                    <th>Budget</th>
+                </tr>
+            </thead>
+            <tbody id="movieTableBody">
+                <tr><td colspan="5" style="text-align:center; padding: 40px; color: var(--text-muted);">Please select a genre and click "Load Movies".</td></tr>
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination">
+            <button id="prevPage" onclick="loadMoviesByGenre(currentPage - 1)" disabled>Previous</button>
+            <span id="currentPage">Page 1</span>
+            <button id="nextPage" onclick="loadMoviesByGenre(currentPage + 1)">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const movieTableBody = document.getElementById('movieTableBody');
+        const genreSelect = document.getElementById('genreSelect');
+        const currentPageSpan = document.getElementById('currentPage');
+        const prevPageButton = document.getElementById('prevPage');
+        const nextPageButton = document.getElementById('nextPage');
+        const paginationDiv = document.getElementById('pagination');
+
+        let currentPage = 1;
+        const moviesPerPage = 50;
+        let currentGenre = null;
+
+        async function populateGenres() {
+            try {
+                const response = await fetch('/genres/all');
+                if (!response.ok) return;
+                const genresData = await response.json();
+                genresData.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre.name;
+                    option.textContent = genre.name;
+                    genreSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        }
+
+        function loadMoviesByGenre(page) {
+            const genre = genreSelect.value;
+            if (!genre) {
+                alert('Please select a genre.');
+                return;
+            }
+            currentPage = page;
+            currentGenre = genre;
+            fetchMovies(genre, page);
+        }
+
+        async function fetchMovies(genre, page) {
+            const url = `/movies/genre/${encodeURIComponent(genre)}?page=${page}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    if (response.status === 404 && page > 1) {
+                        alert(`No more movies found for the genre "${currentGenre}".`);
+                        currentPage--;
+                        updatePagination();
+                        return;
+                    }
+                    throw new Error('Fetch error');
+                }
+                const movies = await response.json();
+                displayMovies(movies);
+                updatePagination();
+            } catch (error) {
+                movieTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">Error loading genre.</td></tr>`;
+                updatePagination();
+            }
+        }
+
+        function displayMovies(movies) {
+            movieTableBody.innerHTML = '';
+            if (movies.length === 0) {
+                movieTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No movies found for ${currentGenre}.</td></tr>`;
+                paginationDiv.style.display = 'none';
+                return;
+            }
+            paginationDiv.style.display = 'flex';
+            movies.forEach(movie => {
+                const row = movieTableBody.insertRow();
+                
+                row.insertCell().innerHTML = `<span class="imdb-tag">${movie.imdbId}</span>`;
+                
+                const titleCell = row.insertCell();
+                const link = document.createElement('a');
+                link.href = `/movie-details.html?movieId=${movie.movieId || movie.imdbId}`;
+                link.className = 'movie-link';
+                link.textContent = movie.title;
+                titleCell.appendChild(link);
+
+                const genresCell = row.insertCell();
+                try {
+                    const genresArray = JSON.parse(movie.genres);
+                    genresCell.innerHTML = genresArray.map(g => `<span class="genre-pill">${g.name}</span>`).join('');
+                } catch (e) {
+                    genresCell.textContent = '—';
+                }
+
+                row.insertCell().textContent = movie.releaseDate;
+                row.insertCell().textContent = movie.budget;
+            });
+        }
+
+        function updatePagination() {
+            currentPageSpan.textContent = `Page ${currentPage}`;
+            prevPageButton.disabled = currentPage === 1;
+        }
+
+        populateGenres();
+        updatePagination();
+    </script>
+</body>
+</html>
