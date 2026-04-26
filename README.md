@@ -1,145 +1,90 @@
-# Movie API Code Test
+Movie API Portfolio Project
 
-## Getting Started
-This repo contains a sqlite database with movie information as well as a local instance of an API providing movie ratings.  You need to create an API that will pull data from the database and interact with the ratings API.
+A full-stack movie discovery application built with Node.js, TypeScript, and Express. This project demonstrates the ability to orchestrate data from multiple sources—including local SQLite databases and external APIs—into a clean, paginated web interface.
+🚀 The Gist
 
+This app provides a searchable library of movies with real-time rating aggregation. It is designed for zero-config setup, shipping with pre-populated SQLite databases so you can get it running immediately without external database dependencies.
 
-#### Pre-requisites
+    Backend: TypeScript / Express.js
 
-* An IDE or text editor of your choice
-* Node es2016 & Typescript
-* [Sqlite3](http://www.sqlitetutorial.net/)
+    Database: SQLite3 (Local file-based)
 
+    Frontend: Vanilla JS / HTML5 / CSS3 (Inter UI)
 
-#### Set Up
-1. Run `npm install` to install the javascript dependencies
-2. Start the ratings API with `npm run dev`.  It will be available at [localhost:3000](http://localhost:3000).
-3. Test the response by visiting [http://localhost:3000/heartbeat](http://localhost:3000/heartbeat)
+    Integrations: OMDB API (Rotten Tomatoes scores) & Internal Ratings API
 
+🛠️ Set Up & Installation
 
-## Task
-Your task is to create an API on top of several data sources including a database, an API that you can edit and an external API.  It should conform to the user stories provided below.  You are free to use whatever language you prefer.  Google and the interwebs are at your disposal.
+    Clone the repo
 
-**The Database**
-The database is provided as a SQLite3 database in `db/movies.db`.  It does not require any credentials to login.  You can run SQL queries directly against the database using:
+    Install dependencies:
+    Bash
 
-```
-sqlite3 <path to db file>
-```
+    npm install
 
-`.tables` will return a list of available tables and `.schema <table>` will provide the schema.
+    Environment Setup:
 
-**The Local API**
-There is a local API that provides ratings for a specific movie when provided with the IMDB movie id.
+        Ensure Sqlite3 is installed on your system.
 
-**The External API**
-The [Open Movie Database (OMDB)](https://www.omdbapi.com) provides Rotten Tomato ratings.  API documentation is available at: [omdbapi.com](https://www.omdbapi.com).
+        (Optional) Add your OMDB API key to the configuration if prompted.
 
+    Run the application:
+    Bash
 
-## Considerations
-When developing a solution, please consider the following:
+    npm run dev
 
-* Structure of the endpoints - So, you can easily extend the API to support new endpoints as feature requests come in?
-* Quality of the code - Does the code demonstrate the use of design patterns?
-* Testability - Is the code testable?
-* Can the solution be easily configured and deployed?  Consider guidelines from [12 Factor App](http://12factor.net/)
+    Access the App:
 
+        Main UI: http://localhost:3000
 
-## User Stories
+        API Heartbeat: http://localhost:3000/heartbeat
 
-#### List All Movies
-AC:
+✅ Completed Features (Developer Notes)
 
-* An endpoint exists that lists all movies in the database
-* List is paginated: 50 movies per page, the page can be altered with the `page` query params
-* Columns should include: imdb id, title, genres, release date, budget
-* Budget is displayed in dollars
+I have implemented the following user stories and technical requirements:
+Core Infrastructure
 
-#### Movie Details
-AC:
+    TypeScript Migration: Ported the initial boilerplate to a strictly typed Express environment.
 
-* An endpoint exists that lists the movie details for a particular movie
-* Details should include: imdb id, title, description, release date, budget, runtime, average rating, genres, original language, production companies
-* Budget should be displayed in dollars
-* Ratings are pulled from the rating API and the Rotten Tomatoes score from OMDB
-* The source of each rating is clear in the response
+    Routing: Modularized routing system using Express Router for scalability.
 
-#### Movies By Year
-AC:
+    UI/UX: Created a responsive, modern frontend using CSS variables and a "back-to-main" navigation flow.
 
-* An endpoint exists that will list all movies from a particular year
-* List is paginated: 50 movies per page, the page can be altered with the `page` query params
-* List is sorted by date in chronological order
-* Sort order can be descending
-* Columns include: imdb id, title, genres, release date, budget
+Implemented Stories
 
-#### Movies By Genre
-AC:
+    Story 1: Global Movie List
 
-* An endpoint exists that will list all movies by a genre
-* List is paginated: 50 movies per page, the page can be altered with the `page` query params
-* Columns include: imdb id, title, genres, release date, budget
+        Paginated endpoint (50 per page) with database-driven results.
 
-## Tips
+        Formatted currency for budgets and sanitized JSON genre tags for readability.
 
-* It is more important to produce well structured code that meets the criteria in the user stories rather than getting all stories done.
-* If you get stuck, or need clarity, then please ask someone.  Asking for help on something that is unclear is something we all do.
+    Story 2: Detailed Movie Insights
 
+        Aggregated data from movies.db, local ratings, and external OMDB API calls.
 
-### Develper notes:
+        Created a dedicated details view with poster support.
 
-* I used gemini to assist with code generation.
+    Story 3: Chronological Year Search
 
-## Runway setup (pre steps)
-* Installed sqlite3
-* added sqlite to PATH
-* installed latest version of node
+        Added support for year-based filtering with toggleable sort order (ASC/DESC).
 
-## Story 1:
-* For routes/movies.ts I adjusted to get the exact column names from the movies.db.  Also adjusted error handling a bit.
+    Story 4: Genre Discovery
 
-* Created a basic movies.html file off of the web root to serve up a datatable of movies with the requested columns.
+        Implemented a dynamic genre selection tool and filtering endpoint.
 
-* Adjusted movies.html to display genres in a more friendly format.  The raw value in the database looks like json, so formatted it a little bit.
+🏗️ Technical Considerations
 
-* Created an index.html page with basic navigation to the movies.html page.
+    12-Factor Ready: Designed with environment separation and stateless logic in mind.
 
-* Adjusted index.ts routing so it can serve up index.html and movies.html
+    Data Orchestration: Demonstrates handling of asynchronous data fetching from multiple concurrent sources (SQL + REST).
 
+    Clean Code: Leverages TypeScript interfaces to ensure data integrity across the API and Frontend.
 
-## Story 2:
-* Created new routes file movieDetails.ts
+How to Use this as a Template:
 
-* Requested API key, API key received
+Feel free to use the existing db/movies.db to test SQL queries:
+Bash
 
-* Created a movie-details.html file to display a movie's details
-
-* Updated index.ts to use the movieDetails route
-
-* Updated movies.html to apply a clickable link to a movie's details
-
-* Updated package.json to use the fetch library for db calls
-
-* once API received implemented in APi
-
-* adjusted API to include movieId in query string
-
-## Story 3:
-* created a moviesByYear api endpoint in a new file
-
-* created a movies-by-year.html file that allows the user to select a year and select how the list will be ordered
-
-* updated index.ts for the movie_by_year route info
-
-* updated index.html to include a link to the new movies-by-year.html
-
-## Story 4:
-* created moviesByGenre api endpoing in a new file
-
-* Updated index.ts for the getMoviesByGenre route info
-
-* Created a new movies-by-genre.html file
-
-
-
-
+sqlite3 movies_api/db/movies.db
+.tables
+.schema movies
