@@ -92,6 +92,7 @@ From the project root:
 sqlite3 movies_api/db/movies.db
 
 Once inside the sqlite prompt:
+
 .tables
 
 .schema movies
