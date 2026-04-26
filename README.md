@@ -1,6 +1,8 @@
 Movie API Portfolio Project
 
 A full-stack movie discovery application built with Node.js, TypeScript, and Express. This project demonstrates the ability to orchestrate data from multiple sources—including local SQLite databases and external APIs—into a clean, paginated web interface.
+
+
 🚀 The Gist
 
 This app provides a searchable library of movies with real-time rating aggregation. It is designed for zero-config setup, shipping with pre-populated SQLite databases so you can get it running immediately without external database dependencies.
